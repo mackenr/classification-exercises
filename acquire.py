@@ -1,5 +1,6 @@
 import os
 from rcm_library import *
+from sklearn.model_selection import train_test_split
 
 ######################### Titanic
 #########################
@@ -128,8 +129,14 @@ def uploaded_db_explore(df):
         print('------------------------------')
         
 
+### Edit this one
+def numerical_cols_viz(df):
+    '''
+    needs to be edited more
+    
+    
+    '''
 
-def numcols(df):
     num_col = df.select_dtypes(include='number').columns
     width=len(num_col)*3.25
     fig=plt.figure(figsize=(width,3))
@@ -165,6 +172,28 @@ def prep_telco(telco):
    
     return telco
     
+
+
+
+
+def split_data(df,tostratify=None, test_size=.2,validate_size=.25):
+    '''
+    Takes in a dataframe and return train, validate, test subset dataframes
+    '''
+    if tostratify!=None:
+        train, test = train_test_split(df, test_size=test_size, 
+                               random_state=123, stratify=df[tostratify])
+        train, validate = train_test_split(train, test_size=validate_size, 
+                 random_state=123, stratify=train[tostratify])
+    else:
+        train, test = train_test_split(df, test_size=test_size, 
+                               random_state=123)
+        train, validate = train_test_split(train, test_size=validate_size, 
+                 random_state=123)
+    # df=pd.DataFrame([{['Prepared Data',,,,,,,]:df.shape},{'Train':train.shape},{'Validate':validate.shape},{'Test':test.shape}])
+    df=pd.DataFrame([df.shape,train.shape,validate.shape,test.shape],index=['Prepared Data','Train','Validate','Test'],columns=['Length','Width'])
+    display(df)
+    return train, validate, test
     
 
    
